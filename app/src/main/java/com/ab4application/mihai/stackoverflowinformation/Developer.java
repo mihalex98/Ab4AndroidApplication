@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Mihai on 22/03/2018.
@@ -12,7 +13,7 @@ import java.util.HashMap;
 public class Developer {
     String name;
     String location;
-    Bitmap photo;
+    String photoUrl;
     int goldBadges;
     int silverBadges;
     int bronzeBadges;
@@ -21,13 +22,13 @@ public class Developer {
                      int silverBadges, int bronzeBadges) {
         this.name = name;
         this.location = location;
-
+        this.photoUrl = photoUrl;
         this.goldBadges = goldBadges;
         this.silverBadges = silverBadges;
         this.bronzeBadges = bronzeBadges;
     }
 
-    
+
 
     public static ArrayList<Developer> convertList(ArrayList<HashMap<String, String>> devList) {
         ArrayList<Developer> list = new ArrayList<>();
@@ -43,5 +44,14 @@ public class Developer {
         }
 
         return list;
+    }
+
+    public static String[] getUrls(List<Developer> devList) {
+        String[] urls = new String[devList.size()];
+
+        for(int index = 0; index < urls.length; index++)
+            urls[index] = devList.get(index).photoUrl;
+
+        return urls;
     }
 }

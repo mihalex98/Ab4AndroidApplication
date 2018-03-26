@@ -1,5 +1,6 @@
 package com.ab4application.mihai.stackoverflowinformation;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,9 +18,16 @@ import java.util.List;
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DevViewHolder>{
 
     private List<Developer> devList;
+    private List<Bitmap> devPhoto;
 
     RVAdapter(List<Developer> devList){
         this.devList = devList;
+        this.devPhoto = null;
+    }
+
+    RVAdapter(List<Developer> devList, List<Bitmap> devPhoto){
+        this.devList = devList;
+        this.devPhoto = devPhoto;
     }
 
     @Override
@@ -37,7 +45,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DevViewHolder>{
 
     public void onBindViewHolder(DevViewHolder personViewHolder, int i) {
         personViewHolder.personName.setText(devList.get(i).name);
-        // personViewHolder.personPhoto.setImageResource(devList.get(i).photoLocation);
+        if(devPhoto != null)
+            personViewHolder.personPhoto.setImageBitmap(devPhoto.get(i));
     }
 
     @Override
