@@ -16,7 +16,7 @@ import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DevViewHolder>{
 
-    List<Developer> devList;
+    private List<Developer> devList;
 
     RVAdapter(List<Developer> devList){
         this.devList = devList;

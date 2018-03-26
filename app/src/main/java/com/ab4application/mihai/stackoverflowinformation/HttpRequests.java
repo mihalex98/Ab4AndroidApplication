@@ -18,7 +18,6 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 public class HttpRequests {
-    static String response = null;
     public final static int GETRequest = 1;
     public final static int POSTRequest = 2;
 
@@ -48,14 +47,13 @@ public class HttpRequests {
         try {
             url = new URL(urladdress);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(5001); // 5 seconds
-            conn.setConnectTimeout(5001); // 5 seconds
+            conn.setReadTimeout(15001); // 15 seconds
+            conn.setConnectTimeout(15001); // 15 seconds
             conn.setDoInput(true);
-            conn.setDoOutput(true);
             if (requestmethod == POSTRequest) {
                 conn.setRequestMethod("POST");
             } else if (requestmethod == GETRequest) {
-                conn.setRequestMethod("GETRequest");
+                conn.setRequestMethod("GET");
             }
 
             if (params != null) {

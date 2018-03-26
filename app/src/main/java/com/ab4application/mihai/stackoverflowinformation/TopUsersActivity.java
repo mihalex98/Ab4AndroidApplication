@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +23,9 @@ public class TopUsersActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private LinearLayoutManager layoutManager;
-    private List<Developer> devList;
+    private List<Developer> devTestList;
     private static String devUrl =
-            "https://api.stackexchange.com/2.2/users?order=desc&sort=reputation&site=stackoverflow";
+            "https://api.stackexchange.com/2.2/users?order=desc&sort=reputation&site=stackoverflow&key=7IMNkELcDMRrfan6Kd7k3w((";
     private static int noOfUsersToDisplay = 10;
 
 
@@ -39,7 +40,8 @@ public class TopUsersActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
         // initializing data and passing it to the adapter
-        RVAdapter adapter = new RVAdapter(devList);
+        devTestList = new ArrayList<>();
+        RVAdapter adapter = new RVAdapter(devTestList);
         rv.setAdapter(adapter);
 
         new GetDevelopers().execute();
@@ -47,31 +49,31 @@ public class TopUsersActivity extends AppCompatActivity {
     }
 
     private void initializeData() {
-        devList = new ArrayList<>();
-        devList.add( new Developer("Mihai Tataru", "Manchester, UK", 0,
+        devTestList = new ArrayList<>();
+        devTestList.add( new Developer("Mihai Tataru", "Manchester, UK", null,
                 5, 24, 45) );
-        devList.add( new Developer("John Smith", "London, UK", 0,
+        devTestList.add( new Developer("John Smith", "London, UK", null,
                 0, 2, 42) );
-        devList.add( new Developer("Alan Gilbert", "Bucharest, ROM", 0,
+        devTestList.add( new Developer("Alan Gilbert", "Bucharest, ROM", null,
                 2, 12, 41) );
-        devList.add( new Developer("Mihai Tataru", "Manchester, UK", 0,
+        devTestList.add( new Developer("Mihai Tataru", "Manchester, UK", null,
                 5, 24, 45) );
-        devList.add( new Developer("John Smith", "London, UK", 0,
+        devTestList.add( new Developer("John Smith", "London, UK", null,
                 0, 2, 42) );
-        devList.add( new Developer("Alan Gilbert", "Bucharest, ROM", 0,
+        devTestList.add( new Developer("Alan Gilbert", "Bucharest, ROM", null,
                 2, 12, 41) );
-        devList.add( new Developer("Mihai Tataru", "Manchester, UK", 0,
+        devTestList.add( new Developer("Mihai Tataru", "Manchester, UK", null,
                 5, 24, 45) );
-        devList.add( new Developer("John Smith", "London, UK", 0,
+        devTestList.add( new Developer("John Smith", "London, UK", null,
                 0, 2, 42) );
-        devList.add( new Developer("Alan Gilbert", "Bucharest, ROM", 0,
+        devTestList.add( new Developer("Alan Gilbert", "Bucharest, ROM", null,
                 2, 12, 41) );
     }
 
     // AsyncTask to make http requests
     public class GetDevelopers extends AsyncTask<Void, Void, Void> {
 
-        ArrayList<HashMap<String, String>> studentList;
+        private ArrayList<HashMap<String, String>> devList;
         ProgressDialog proDialog;
 
         @Override
@@ -82,6 +84,7 @@ public class TopUsersActivity extends AppCompatActivity {
             proDialog.setMessage("Please wait...");
             proDialog.setCancelable(false);
             proDialog.show();
+
         }
 
         @Override
@@ -94,7 +97,8 @@ public class TopUsersActivity extends AppCompatActivity {
 
             Log.d("Response: ", "" + jsonStr);
 
-            studentList = JsonParser.parseJson(jsonStr, noOfUsersToDisplay);
+
+            devList = JsonParser.parseJson(jsonStr, noOfUsersToDisplay);
 
             return null;
         }
@@ -107,10 +111,12 @@ public class TopUsersActivity extends AppCompatActivity {
                 proDialog.dismiss();
 
             // Updating received data from JSON into ListView
-            ArrayList<Developer> convertedList = Developer.convertList(devList);
+            if(devList != null) {
+                ArrayList<Developer> convertedList = Developer.convertList(devList);
 
-            RVAdapter adapter = new RVAdapter(devList);
-            rv.setAdapter(adapter);
+                RVAdapter adapter = new RVAdapter(convertedList);
+                rv.setAdapter(adapter);
+            }
         }
     }
 }
