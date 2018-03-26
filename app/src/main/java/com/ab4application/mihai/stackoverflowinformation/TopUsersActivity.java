@@ -17,6 +17,9 @@ public class TopUsersActivity extends AppCompatActivity {
     private RecyclerView rv;
     private LinearLayoutManager layoutManager;
     private List<Developer> devList;
+    private static String devUrl =
+            "https://api.stackexchange.com/2.2/users?order=desc&sort=reputation&site=stackoverflow";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +38,7 @@ public class TopUsersActivity extends AppCompatActivity {
 
     }
 
-    private void initializeData()
-    {
+    private void initializeData() {
         devList = new ArrayList<>();
         devList.add( new Developer("Mihai Tataru", "Manchester, UK", 0,
                 5, 24, 45) );
