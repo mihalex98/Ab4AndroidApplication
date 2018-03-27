@@ -27,10 +27,11 @@ public class TopUsersActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private LinearLayoutManager layoutManager;
-    private List<Developer> devMainList;
+    private static List<Developer> devMainList;
     private static String devUrl =
             "https://api.stackexchange.com/2.2/users?order=desc&sort=reputation&site=stackoverflow&key=7IMNkELcDMRrfan6Kd7k3w((";
     private static int noOfUsersToDisplay = 10;
+    private static List<Bitmap> bitmapList;
 
 
     @Override
@@ -74,6 +75,16 @@ public class TopUsersActivity extends AppCompatActivity {
                 2, 12, 41) );
     }
 
+    public static Developer getDeveloper(int index)
+    {
+        return devMainList.get(index);
+    }
+
+    public static Bitmap getBitmap(int index)
+    {
+        return bitmapList.get(index);
+    }
+
     // AsyncTask to load bitmaps
     private class DownloadImageTask extends AsyncTask<String, Void, List<Bitmap> > {
 
@@ -101,6 +112,7 @@ public class TopUsersActivity extends AppCompatActivity {
         protected void onPostExecute(List<Bitmap> result) {
             RVAdapter adapter = new RVAdapter(devMainList, result);
             rv.setAdapter(adapter);
+            bitmapList = result;
         }
     }
 

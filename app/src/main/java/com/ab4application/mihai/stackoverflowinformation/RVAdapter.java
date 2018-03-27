@@ -1,5 +1,8 @@
 package com.ab4application.mihai.stackoverflowinformation;
 
+import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -44,7 +47,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DevViewHolder>{
     }
 
     public void onBindViewHolder(DevViewHolder personViewHolder, int i) {
-        personViewHolder.personName.setText(devList.get(i).name);
+        personViewHolder.personId = i;
+        String nameText = String.valueOf(i + 1) + ". " + devList.get(i).name;
+        personViewHolder.personName.setText(nameText);
         if(devPhoto != null)
             personViewHolder.personPhoto.setImageBitmap(devPhoto.get(i));
     }
@@ -58,12 +63,22 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DevViewHolder>{
         CardView cv;
         TextView personName;
         ImageView personPhoto;
+        int personId;
 
         DevViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cardView);
             personName = (TextView)itemView.findViewById(R.id.devName);
             personPhoto = (ImageView)itemView.findViewById(R.id.devImage);
+            // on click listener for the card view
+            cv.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, DeveloperActivity.class);
+                    intent.putExtra("dev", personId);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
