@@ -18,8 +18,16 @@ import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -133,15 +141,90 @@ public class TopUsersActivity extends AppCompatActivity {
 
         }
 
+        private File createFile() throws IOException {
+            File outputDir = getApplicationContext().getCacheDir();
+            return new File(outputDir, "jsonFile.json");
+        }
+
         @Override
         protected Void doInBackground(Void... arg0) {
-            // Creating service handler class instance
-            HttpRequests webreq = new HttpRequests();
+            String jsonStr = "";
+            long expireTime = 1000 * 60 * 30; // 30 minutes in miliseconds
+            // Checking for existing temp file
+            File f = null;
+            if(getApplicationContext().getCacheDir().listFiles().length > 0) {
+                f = getApplicationContext().getCacheDir().listFiles()[0];
 
-            // Making a request to url and getting response
-            String jsonStr = webreq.makeWebServiceCall(devUrl, HttpRequests.GETRequest);
+                if (Calendar.getInstance().getTimeInMillis() - f.lastModified() < expireTime) {
 
-            Log.d("Response: ", "" + jsonStr);
+                    // Reading from the file
+                    try {
+                        int length = (int) f.length();
+
+                        byte[] bytes = new byte[length];
+
+                        FileInputStream in = new FileInputStream(f);
+                        try {
+                            in.read(bytes);
+                        } finally {
+                            in.close();
+                        }
+
+                        jsonStr = new String(bytes);
+                    } catch (IOException ex) {
+                        Log.d("Exception: ", ex.getMessage());
+                    }
+                }
+                else {
+                    // If the file is older than expireTime
+                    // Delete the file and create a new one
+                    try {
+                        f.delete();
+                        // Writing to the file
+                        f = createFile();
+                        // Creating service handler class instance
+                        HttpRequests webreq = new HttpRequests();
+
+                        // Making a request to url and getting response
+
+                        jsonStr = webreq.makeWebServiceCall(devUrl, HttpRequests.GETRequest);
+                        Log.d("Response: ", "" + jsonStr);
+
+                        FileOutputStream stream = new FileOutputStream(f);
+                        try {
+                            stream.write(jsonStr.getBytes());
+                        } finally {
+                            stream.close();
+                        }
+                    }
+                    catch(IOException ex) {
+                        Log.d("Exception: ", ex.getMessage());
+                    }
+                }
+            }
+            else {
+                try {
+                    // Writing to the file
+                    f = createFile();
+                    // Creating service handler class instance
+                    HttpRequests webreq = new HttpRequests();
+
+                    // Making a request to url and getting response
+
+                    jsonStr = webreq.makeWebServiceCall(devUrl, HttpRequests.GETRequest);
+                    Log.d("Response: ", "" + jsonStr);
+
+                    FileOutputStream stream = new FileOutputStream(f);
+                    try {
+                        stream.write(jsonStr.getBytes());
+                    } finally {
+                        stream.close();
+                    }
+                }
+                catch(IOException ex) {
+                    Log.d("Exception: ", ex.getMessage());
+                }
+            }
 
 
             devList = JsonParser.parseJson(jsonStr, noOfUsersToDisplay);

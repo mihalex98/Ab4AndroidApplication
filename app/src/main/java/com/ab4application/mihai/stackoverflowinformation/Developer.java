@@ -11,6 +11,7 @@ import java.util.List;
  */
 
 public class Developer {
+
     String name;
     String location;
     String photoUrl;

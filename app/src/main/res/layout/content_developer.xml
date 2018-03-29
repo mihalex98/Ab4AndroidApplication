@@ -39,7 +39,7 @@
             android:layout_marginStart="31dp"
             android:layout_marginTop="48dp"
             android:contentDescription="@string/dev_avatar"
-            app:srcCompat="@color/colorPrimary"
+            app:srcCompat="@drawable/dev_image"
             tools:layout_editor_absoluteX="27dp"
             tools:layout_editor_absoluteY="45dp" />
 
